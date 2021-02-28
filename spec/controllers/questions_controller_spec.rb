@@ -67,11 +67,6 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     context 'valid params' do
-      it 'assigns the requested question to @question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-        expect(assigns(:question)).to eq question
-      end
-
       it 'changes question attributes' do
         patch :update, params: { id: question, question: { title: 'new_title', body: 'new_body' } }
         question.reload
@@ -88,6 +83,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'invalid params' do
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
+
       it 'does not change question' do
         question.reload
 
