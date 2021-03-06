@@ -5,7 +5,10 @@ class QuestionsController < ApplicationController
     @questions = Question.all
   end
 
-  def show; end
+  def show
+    @answers = question.answers
+    @answer ||= Answer.new
+  end
 
   def new; end
 

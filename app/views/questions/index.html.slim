@@ -1,1 +1,5 @@
+h1 Tests
+- @questions.each do |question|
+  a *{ href: question_path(question) } = question.title
+
 p= link_to 'Ask question', new_question_path

@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
+
   def index
     @answers = question.answers
   end
