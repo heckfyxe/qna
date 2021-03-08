@@ -39,7 +39,7 @@ class QuestionsController < ApplicationController
     else
       flash[:alert] = "You aren't the author of the question!"
     end
-    redirect_to question_path
+    redirect_to questions_path
   end
 
   private
