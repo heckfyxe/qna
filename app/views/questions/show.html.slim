@@ -4,7 +4,10 @@ p= question.body
 h2 Answers
 = render 'shared/errors', resource: @answer
 - @answers.each do |answer|
-  p= answer.body
+  p
+    = answer.body
+    |
+    = link_to 'Delete', answer_path(answer), method: :delete
 
 = form_with model: [question, @answer] do |f|
   p
