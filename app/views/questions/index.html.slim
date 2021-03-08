@@ -1,5 +1,5 @@
 h1 Questions
 - @questions.each do |question|
-  a *{ href: question_path(question) } = question.title
+  =link_to question.title, question_path(question)
 
 p= link_to 'Ask question', new_question_path
