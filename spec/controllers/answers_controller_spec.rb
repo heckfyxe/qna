@@ -4,45 +4,9 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
   let(:answer) { create(:answer) }
 
-  describe 'GET #index' do
-    let(:answers) { create_list(:answer, 3, question: question) }
-
-    before { get :index, params: { question_id: question } }
-
-    it 'populates an array of all answers of question' do
-      create_list(:answer, 5)
-      expect(assigns(:answers)).to match_array(answers)
-    end
-
-    it 'renders index view' do
-      expect(response).to render_template :index
-    end
-  end
-
-  describe 'GET #show' do
-    it 'renders show view' do
-      get :show, params: { id: answer }
-      expect(response).to render_template :show
-    end
-  end
-
   context 'Authenticated user' do
     let(:user) { create(:user) }
     before { login(user) }
-
-    describe 'GET #new' do
-      it 'renders new view' do
-        get :new, params: { question_id: question }
-        expect(response).to render_template :new
-      end
-    end
-
-    describe 'GET #edit' do
-      it 'renders edit view' do
-        get :edit, params: { id: answer }
-        expect(response).to render_template :edit
-      end
-    end
 
     describe 'POST #create' do
       context 'with valid attributes' do
@@ -64,9 +28,9 @@ RSpec.describe AnswersController, type: :controller do
           }.to change(question.answers, :count).by(1)
         end
 
-        it 'redirects to show view' do
+        it 'redirects to question' do
           post :create, params: { question_id: question, answer: attributes_for(:answer) }
-          expect(response).to redirect_to assigns(:answer)
+          expect(response).to redirect_to question_path(question)
         end
       end
 
@@ -80,9 +44,9 @@ RSpec.describe AnswersController, type: :controller do
           }.to_not change(Answer, :count)
         end
 
-        it 're-renders new view' do
+        it 'redirects to question' do
           post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-          expect(response).to render_template :new
+          expect(response).to redirect_to question_path(question)
         end
       end
     end
@@ -96,9 +60,9 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer.body).to eq 'new_title'
         end
 
-        it 'redirects to updated answer' do
+        it 'redirects to question' do
           patch :update, params: { id: answer, answer: attributes_for(:answer) }
-          expect(response).to redirect_to(answer)
+          expect(response).to redirect_to question_path(answer.question)
         end
       end
 
@@ -112,8 +76,8 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer.body).to eq text
         end
 
-        it 're-renders edit view' do
-          expect(response).to render_template :edit
+        it 'redirects to question' do
+          expect(response).to redirect_to question_path(answer.question)
         end
       end
     end
@@ -125,9 +89,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to index' do
+      it 'redirects to question' do
         delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_answers_path(answer.question)
+        expect(response).to redirect_to question_path(answer.question)
       end
     end
   end

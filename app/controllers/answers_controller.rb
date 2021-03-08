@@ -1,36 +1,20 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
-  def index
-    @answers = question.answers
-  end
-
-  def show; end
-
-  def new; end
-
-  def edit; end
-
   def create
     @answer = question.answers.build(answer_params)
-    if @answer.save
-      redirect_to @answer
-    else
-      render :new
-    end
+    @answer.save
+    redirect_to question_path(question)
   end
 
   def update
-    if answer.update(answer_params)
-      redirect_to answer
-    else
-      render :edit
-    end
+    answer.update(answer_params)
+    redirect_to question_path(question)
   end
 
   def destroy
     answer.destroy
-    redirect_to question_answers_path(question)
+    redirect_to question_path(question)
   end
 
   private
