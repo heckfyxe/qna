@@ -1,6 +1,10 @@
 FactoryBot.define do
+  sequence :body do |n|
+    "Great answer to the question #{n}"
+  end
+
   factory :answer do
-    body { "Great answer to the question" }
+    body
     question
     author { association :user }
 
