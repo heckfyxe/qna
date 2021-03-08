@@ -1,19 +1,30 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show]
+  before_action :authenticate_user!
 
   def create
     @answer = question.answers.build(answer_params)
+    @answer.author = current_user
     @answer.save
     redirect_to question_path(question)
   end
 
   def update
-    answer.update(answer_params)
+    if current_user.author?(answer)
+      answer.update(answer_params)
+    else
+      flash[:alert] = "You aren't the author of the answer!"
+    end
+
     redirect_to question_path(question)
   end
 
   def destroy
-    answer.destroy
+    if current_user.author?(answer)
+      answer.destroy
+      flash[:notice] = 'Answer successfully deleted.'
+    else
+      flash[:alert] = "You aren't the author of the answer!"
+    end
     redirect_to question_path(question)
   end
 

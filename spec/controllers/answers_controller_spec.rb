@@ -52,7 +52,9 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      context 'valid params' do
+      context 'author with valid params' do
+        let(:answer) { create(:answer, author: user) }
+
         it 'changes answer attributes' do
           patch :update, params: { id: answer, answer: { body: 'new_title' } }
           answer.reload
@@ -63,6 +65,15 @@ RSpec.describe AnswersController, type: :controller do
         it 'redirects to question' do
           patch :update, params: { id: answer, answer: attributes_for(:answer) }
           expect(response).to redirect_to question_path(answer.question)
+        end
+      end
+
+      context 'no author with valid params' do
+        it 'not changes answer attributes' do
+          patch :update, params: { id: answer, answer: { body: 'new_title' } }
+          answer.reload
+
+          expect(answer.body).to_not eq 'new_title'
         end
       end
 
@@ -83,10 +94,20 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let!(:answer) { create(:answer) }
+      context 'Author' do
+        let!(:answer) { create(:answer, author: user) }
 
-      it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        it 'deletes the answer' do
+          expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        end
+      end
+
+      context 'No author' do
+        let!(:answer) { create(:answer) }
+
+        it 'cannot delete the answer' do
+          expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+        end
       end
 
       it 'redirects to question' do

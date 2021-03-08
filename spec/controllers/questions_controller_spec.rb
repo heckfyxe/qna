@@ -70,7 +70,9 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      context 'valid params' do
+      context 'author valid params' do
+        let(:question) { create(:question, author: user) }
+
         it 'assigns the requested question to @question' do
           patch :update, params: { id: question, question: attributes_for(:question) }
           expect(assigns(:question)).to eq question
@@ -87,6 +89,29 @@ RSpec.describe QuestionsController, type: :controller do
         it 'redirects to updated question' do
           patch :update, params: { id: question, question: attributes_for(:question) }
           expect(response).to redirect_to(question)
+        end
+      end
+
+      context 'not author valid params' do
+        it 'assigns the requested question to @question' do
+          patch :update, params: { id: question, question: attributes_for(:question) }
+          expect(assigns(:question)).to eq question
+        end
+
+        it 'changes question attributes' do
+          title = question.title
+          body = question.body
+
+          patch :update, params: { id: question, question: { title: 'new_title', body: 'new_body' } }
+          question.reload
+
+          expect(question.title).to eq title
+          expect(question.body).to eq body
+        end
+
+        it 're-renders edit view' do
+          patch :update, params: { id: question, question: attributes_for(:question) }
+          expect(response).to render_template :edit
         end
       end
 
@@ -108,10 +133,20 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let!(:question) { create(:question) }
+      context 'Author' do
+        let!(:question) { create(:question, author: user) }
 
-      it 'deletes the question' do
-        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+        it 'deletes the question' do
+          expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+        end
+      end
+
+      context 'No author' do
+        let!(:question) { create(:question) }
+
+        it 'cannot delete the question' do
+          expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+        end
       end
 
       it 'redirects to index' do
