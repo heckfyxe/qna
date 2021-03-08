@@ -4,12 +4,12 @@ feature 'User can answer the question', %q{
   As authenticated user
   I'd like to be able to answer the question
 } do
+  let(:user) { create(:user) }
+  let(:question) { create(:question) }
 
   scenario 'answers the question' do
-    user = create(:user)
     sign_in(user)
 
-    question = create(:question)
     visit question_path(question)
 
     answer_text = 'Some answer to question'
@@ -20,7 +20,6 @@ feature 'User can answer the question', %q{
   end
 
   scenario 'Unauthenticated user tries to answer' do
-    question = create(:question)
     visit question_path(question)
 
     answer_text = 'Smart answer to question'
