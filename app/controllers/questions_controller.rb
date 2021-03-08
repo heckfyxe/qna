@@ -15,7 +15,7 @@ class QuestionsController < ApplicationController
   def edit; end
 
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.build(question_params)
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
@@ -24,15 +24,21 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if question.update(question_params)
+    if current_user.author?(question) && question.update(question_params)
       redirect_to question
     else
+      flash[:alert] = "You aren't the author of the question!" unless current_user.author?(question)
       render :edit
     end
   end
 
   def destroy
-    question.destroy
+    if current_user.author?(question)
+      question.destroy
+      flash[:notice] = 'Question successfully deleted.'
+    else
+      flash[:alert] = "You aren't the author of the question!"
+    end
     redirect_to question_path
   end
 
