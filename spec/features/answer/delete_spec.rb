@@ -21,8 +21,6 @@ feature 'User can delete the answer', %q{
       expect(page).to have_content('Answer successfully deleted.')
     end
 
-    let(:answer) { create(:answer, question: question) }
-
     scenario 'Not author tries to delete the answer' do
       visit question_path(question)
       click_on 'Delete'
