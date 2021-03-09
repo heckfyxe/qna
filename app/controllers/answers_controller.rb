@@ -4,8 +4,11 @@ class AnswersController < ApplicationController
   def create
     @answer = question.answers.build(answer_params)
     @answer.author = current_user
-    @answer.save
-    redirect_to question_path(question)
+    if @answer.save
+      redirect_to question_path(question)
+    else
+      redirect_to question_path(question), flash: { error: @answer.errors.full_messages.join(', ') }
+    end
   end
 
   def update

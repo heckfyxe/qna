@@ -2,7 +2,7 @@ h1= question.title
 p= question.body
 
 h2 Answers
-= render 'shared/errors', resource: @answer
+p= flash[:error]
 - @answers.each do |answer|
   p
     = answer.body
