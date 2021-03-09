@@ -18,21 +18,17 @@ feature 'User can delete the answer', %q{
       visit question_path(question)
       click_on 'Delete'
 
-      expect(page).to have_content('Answer successfully deleted.')
+      expect(page).to have_content 'Answer successfully deleted.'
     end
 
     scenario 'Not author tries to delete the answer' do
       visit question_path(question)
-      click_on 'Delete'
-
-      expect(page).to have_content "You aren't the author of the answer!"
+      expect(page).to_not have_content 'Delete'
     end
   end
 
-  scenario 'Unauthenticated user tries to answer' do
+  scenario 'Unauthenticated user tries to delete answer' do
     visit question_path(question)
-    click_on 'Delete'
-
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).to_not have_content 'Delete'
   end
 end
