@@ -2,12 +2,12 @@ h1= question.title
 p= question.body
 
 h2 Answers
-p= flash[:error]
-- @answers.each do |answer|
+= render 'shared/errors', resource: @answer
+- @answers.each do |ans|
   p
-    = answer.body
-    - if current_user&.author?(answer)
-      =< link_to 'Delete', answer_path(answer), method: :delete
+    = ans.body
+    - if current_user&.author?(ans)
+      =< link_to 'Delete', answer_path(ans), method: :delete
 
 = form_with model: [question, @answer] do |f|
   p

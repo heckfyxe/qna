@@ -4,19 +4,29 @@ feature 'User can answer the question', %q{
   As authenticated user
   I'd like to be able to answer the question
 } do
-  let(:user) { create(:user) }
   let(:question) { create(:question) }
 
-  scenario 'answers the question' do
-    sign_in(user)
+  context 'Authenticated user' do
+    let(:user) { create(:user) }
 
-    visit question_path(question)
+    background do
+      sign_in(user)
+      visit question_path(question)
+    end
 
-    answer_text = 'Some answer to question'
-    fill_in 'Answer', with: answer_text
-    click_on 'To answer'
+    scenario 'answers the question with valid params' do
+      answer_text = 'Some answer to question'
+      fill_in 'Answer', with: answer_text
+      click_on 'To answer'
 
-    expect(page).to have_content answer_text
+      expect(page).to have_content answer_text
+    end
+
+    scenario 'answers the question with invalid params' do
+      click_on 'To answer'
+
+      expect(page).to have_content "Body can't be blank"
+    end
   end
 
   scenario 'Unauthenticated user tries to answer' do
