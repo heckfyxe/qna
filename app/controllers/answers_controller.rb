@@ -7,7 +7,8 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to question_path(question)
     else
-      redirect_to question_path(question), flash: { error: @answer.errors.full_messages.join(', ') }
+      @answers = question.answers.filter(&:persisted?)
+      render 'questions/show'
     end
   end
 
