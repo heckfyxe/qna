@@ -6,7 +6,8 @@ p= flash[:error]
 - @answers.each do |answer|
   p
     = answer.body
-    =< link_to 'Delete', answer_path(answer), method: :delete if current_user&.author?(answer)
+    - if current_user&.author?(answer)
+      =< link_to 'Delete', answer_path(answer), method: :delete
 
 = form_with model: [question, @answer] do |f|
   p
