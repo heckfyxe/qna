@@ -4,10 +4,11 @@ p= question.body
 h2 Answers
 = render 'shared/errors', resource: @answer
 - @answers.each do |ans|
-  p
-    = ans.body
-    - if current_user&.author?(ans)
-      =< link_to 'Delete', answer_path(ans), method: :delete
+  - if ans.persisted?
+    p
+      = ans.body
+      - if current_user&.author?(ans)
+        =< link_to 'Delete', answer_path(ans), method: :delete
 
 = form_with model: [question, @answer] do |f|
   p

@@ -7,7 +7,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to question_path(question)
     else
-      @answers = question.answers.filter(&:persisted?)
+      @answers = question.answers
       render 'questions/show'
     end
   end
