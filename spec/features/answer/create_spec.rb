@@ -6,7 +6,7 @@ feature 'User can answer the question', %q{
 } do
   let(:question) { create(:question) }
 
-  context 'Authenticated user' do
+  context 'Authenticated user', js: true do
     let(:user) { create(:user) }
 
     background do
