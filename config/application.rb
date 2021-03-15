@@ -24,5 +24,7 @@ module Qna
                        request_specs: false,
                        controller_specs: true
     end
+
+    config.action_view.form_with_generates_remote_forms = true
   end
 end
