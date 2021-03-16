@@ -6,6 +6,8 @@
 //= require popper
 //= require bootstrap
 
+require('packs/answers')
+
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"

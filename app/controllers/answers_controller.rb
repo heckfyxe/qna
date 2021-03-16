@@ -13,8 +13,6 @@ class AnswersController < ApplicationController
     else
       flash[:alert] = "You aren't the author of the answer!"
     end
-
-    redirect_to question_path(question)
   end
 
   def destroy
