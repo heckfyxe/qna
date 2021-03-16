@@ -54,21 +54,16 @@ RSpec.describe AnswersController, type: :controller do
         let(:answer) { create(:answer, author: user) }
 
         it 'changes answer attributes' do
-          patch :update, params: { id: answer, answer: { body: 'new_title' } }
+          patch :update, params: { id: answer, answer: { body: 'new_title' } }, format: :js
           answer.reload
 
           expect(answer.body).to eq 'new_title'
-        end
-
-        it 'redirects to question' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer) }
-          expect(response).to redirect_to question_path(answer.question)
         end
       end
 
       context 'no author with valid params' do
         it 'not changes answer attributes' do
-          patch :update, params: { id: answer, answer: { body: 'new_title' } }
+          patch :update, params: { id: answer, answer: { body: 'new_title' } }, format: :js
           answer.reload
 
           expect(answer.body).to_not eq 'new_title'
@@ -76,7 +71,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       context 'invalid params' do
-        before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) } }
+        before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js }
 
         it 'does not change answer' do
           text = answer.body
@@ -84,10 +79,11 @@ RSpec.describe AnswersController, type: :controller do
 
           expect(answer.body).to eq text
         end
+      end
 
-        it 'redirects to question' do
-          expect(response).to redirect_to question_path(answer.question)
-        end
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
+        expect(response).to render_template :update
       end
     end
 
