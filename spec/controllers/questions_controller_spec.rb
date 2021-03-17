@@ -94,7 +94,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       context 'not author valid params' do
         it 'assigns the requested question to @question' do
-          patch :update, params: { id: question, question: attributes_for(:question) }
+          patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
           expect(assigns(:question)).to eq question
         end
 
@@ -102,21 +102,22 @@ RSpec.describe QuestionsController, type: :controller do
           title = question.title
           body = question.body
 
-          patch :update, params: { id: question, question: { title: 'new_title', body: 'new_body' } }
+          patch :update, params: { id: question, question: { title: 'new_title', body: 'new_body' } }, format: :js
           question.reload
 
           expect(question.title).to eq title
           expect(question.body).to eq body
         end
 
-        it 're-renders edit view' do
-          patch :update, params: { id: question, question: attributes_for(:question) }
-          expect(response).to render_template :edit
+        it 'renders update script' do
+          patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
+          expect(response).to render_template :update
         end
       end
 
       context 'invalid params' do
-        before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
+        before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js }
+
         it 'does not change question' do
           title = question.title
           body = question.body
@@ -126,8 +127,8 @@ RSpec.describe QuestionsController, type: :controller do
           expect(question.body).to eq body
         end
 
-        it 're-renders edit view' do
-          expect(response).to render_template :edit
+        it 'renders update script' do
+          expect(response).to render_template :update
         end
       end
     end

@@ -33,7 +33,26 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario 'edits his answer with errors'
-    scenario "tries to edit other user's question"
+    scenario 'edits his answer with errors' do
+      sign_in user
+      visit question_path(question)
+
+      click_on 'Edit'
+
+      within '.answers' do
+        fill_in 'Your answer', with: ''
+        click_on 'Save'
+      end
+
+      expect(page).to have_content "Body can't be blank"
+    end
+
+    scenario "tries to edit other user's question" do
+      user = create(:user)
+      sign_in user
+      visit question_path(question)
+
+      expect(page).to_not have_content 'Edit'
+    end
   end
 end
