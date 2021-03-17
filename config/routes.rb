@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   root to: 'questions#index'
 
   resources :questions do
-    resources :answers, shallow: true, except: %i[index show new edit]
+    resources :answers, shallow: true, except: %i[index show new edit] do
+      member do
+        post 'mark_as_the_best'
+      end
+    end
   end
 end

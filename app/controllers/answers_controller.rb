@@ -15,6 +15,15 @@ class AnswersController < ApplicationController
     end
   end
 
+  def mark_as_the_best
+    if current_user.author?(question)
+      question.answers.the_best.update(the_best: false)
+      answer.update(the_best: true)
+    else
+      flash[:alert] = "You aren't the author of the question!"
+    end
+  end
+
   def destroy
     if current_user.author?(answer)
       answer.destroy
