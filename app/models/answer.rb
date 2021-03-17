@@ -6,5 +6,18 @@ class Answer < ApplicationRecord
   belongs_to :author, class_name: 'User', foreign_key: :author_id
 
   validates :body, presence: true
-  validate { errors.add(:base, 'Question can have only one the best answer') unless question.answers.the_best.count <= 1 }
+  validate :one_the_best_in_question
+
+  def mark_as_the_best
+    transaction do
+      question.answers.the_best.update(the_best: false)
+      update(the_best: true)
+    end
+  end
+
+  private
+
+  def one_the_best_in_question
+    errors.add(:base, 'Question can have only one the best answer') unless question && question.answers.the_best.count <= 1
+  end
 end

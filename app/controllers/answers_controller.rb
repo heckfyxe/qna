@@ -17,8 +17,7 @@ class AnswersController < ApplicationController
 
   def mark_as_the_best
     if current_user.author?(question)
-      question.answers.the_best.update(the_best: false)
-      answer.update(the_best: true)
+      answer.mark_as_the_best
     else
       flash[:alert] = "You aren't the author of the question!"
     end
