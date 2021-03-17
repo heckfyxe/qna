@@ -26,13 +26,13 @@ class QuestionsController < ApplicationController
   def update
     unless current_user.author?(question)
       flash[:alert] = "You aren't the author of the question!" unless current_user.author?(question)
-      render :edit and return
+      render :update and return
     end
 
     if question.update(question_params)
       redirect_to question
     else
-      render :edit
+      render :update
     end
   end
 
