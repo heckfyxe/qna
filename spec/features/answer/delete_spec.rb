@@ -11,14 +11,14 @@ feature 'User can delete the answer', %q{
   describe 'Authenticated user' do
     background { sign_in(user) }
 
-    scenario 'Author deletes the answer' do
+    scenario 'Author deletes the answer', js: true do
       answer.author = user
       answer.save!
 
       visit question_path(question)
       click_on 'Delete'
 
-      expect(page).to have_content 'Answer successfully deleted.'
+      expect(page).to_not have_content answer.body
     end
 
     scenario 'Not author tries to delete the answer' do
