@@ -1,9 +1,18 @@
 - if answer.persisted?
-  p
-    = answer.body
-    - if current_user&.author?(answer)
-      =< link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      =< link_to 'Delete', answer_path(answer), method: :delete, remote: true
+  ruby:
+    def the_best_answer_class(answer)
+      answer.the_best? ? { tag: 'div', class: 'the-best-answer' } : { tag: 'div' }
+    end
+  *the_best_answer_class(answer)
+    p
+      = answer.body
+      - if current_user&.author?(answer)
+        =< link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+        =< link_to 'Delete', answer_path(answer), method: :delete, remote: true
+        - if answer.the_best?
+          '  The best answer!
+        -else
+          =< link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :post, remote: true
 
 = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
   = f.label :body, 'Your answer'

@@ -109,5 +109,37 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to render_template :destroy
       end
     end
+
+    describe 'POST #mark_as_the_best' do
+      context 'Author of question' do
+        let(:question) { create(:question, author: user) }
+        let(:the_best_answer) { create(:answer, :the_best, question: question) }
+        let(:answer) { create(:answer, question: question) }
+
+        it 'changes the best answer' do
+          the_best_answer
+          post :mark_as_the_best, params: { id: answer }, format: :js
+
+          the_best_answer.reload
+          answer.reload
+
+          expect(the_best_answer.the_best?).to be_falsey
+          expect(answer.the_best?).to be_truthy
+        end
+      end
+
+      context "No author of question" do
+        let(:answer) { create(:answer, question: question) }
+
+        it "cannot choose the best answer" do
+          expect { post :mark_as_the_best, params: { id: answer }, format: :js }.to_not change(Answer.the_best, :ids)
+        end
+      end
+
+      it 'renders mark_as_the_best script' do
+        post :mark_as_the_best, params: { id: answer }, format: :js
+        expect(response).to render_template :mark_as_the_best
+      end
+    end
   end
 end
