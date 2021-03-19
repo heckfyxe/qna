@@ -10,8 +10,12 @@ class Answer < ApplicationRecord
 
   def mark_as_the_best
     transaction do
-      question.answers.the_best.update!(the_best: false)
-      update!(the_best: true)
+      answer = question.answers.the_best.limit(1).first
+      answer&.the_best = false
+      answer&.save!
+
+      self.the_best = true
+      save!
     end
   end
 
