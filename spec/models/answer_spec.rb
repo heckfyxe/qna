@@ -12,4 +12,8 @@ RSpec.describe Answer, type: :model do
     answer.validate
     expect(answer.errors[:base]).to eq ['Question can have only one the best answer']
   end
+
+  it 'have many attached files' do
+    expect(Question.new.files).to be_an_instance_of ActiveStorage::Attached::Many
+  end
 end

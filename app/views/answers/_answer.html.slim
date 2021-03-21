@@ -7,8 +7,11 @@
         =< link_to 'Delete', answer_path(answer), method: :delete, remote: true
         - if answer.the_best?
           '  The best answer!
-        -else
+        - else
           =< link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :post, remote: true
+      - if answer.files.attached?
+        - answer.files.each do |file|
+          =< link_to file.filename.to_s, url_for(file)
 
 = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
   = f.label :body, 'Your answer'
