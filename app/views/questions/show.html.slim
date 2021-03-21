@@ -16,4 +16,7 @@ h2 Answers
   p
     = f.label :body, "Answer"
     = f.text_area :body
-    = f.submit 'To answer'
+  p
+    = f.label :files
+    = f.file_field :files, multiple: true
+  p = f.submit 'To answer'
