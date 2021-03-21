@@ -14,6 +14,10 @@
           =< link_to file.filename.to_s, url_for(file)
 
 = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
-  = f.label :body, 'Your answer'
-  = f.text_area :body
+  p
+    = f.label :body, 'Your answer'
+    = f.text_area :body
+  p
+    = f.label :files
+    = f.file_field :files, multiple: true
   = f.submit 'Save'
