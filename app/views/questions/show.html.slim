@@ -3,7 +3,9 @@ p= question.body
 
 - if question.files.attached?
   - question.files.each do |file|
-    p= link_to file.filename.to_s, url_for(file)
+    p id="file-#{file.id}"
+      = link_to file.filename.to_s, url_for(file)
+      =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
 
 h2 Answers
 .answers
