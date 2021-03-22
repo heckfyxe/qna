@@ -34,6 +34,12 @@ feature 'User can delete the question', %q{
 
       expect(page).to_not have_content 'Delete'
     end
+
+    scenario 'tries to delete the attachments' do
+      visit question_path(question)
+
+      expect(page).to_not have_content 'Delete'
+    end
   end
 
   scenario 'Unauthenticated user tries to question' do
