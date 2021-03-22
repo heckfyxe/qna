@@ -15,5 +15,11 @@ FactoryBot.define do
     trait :the_best do
       the_best { true }
     end
+
+    trait :with_attachment do
+      after(:build) do |answer|
+        answer.files.attach(io: File.open('spec/rails_helper.rb'), filename: 'rails_helper.rb')
+      end
+    end
   end
 end
