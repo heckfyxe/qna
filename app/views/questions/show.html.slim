@@ -8,6 +8,12 @@ p= question.body
       - if current_user&.author?(file.record)
         =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
 
+.links
+  p Links:
+  ul
+    - question.links.each do |link|
+      li= link_to link.name, link.url
+
 h2 Answers
 .answers
   = render @answers
