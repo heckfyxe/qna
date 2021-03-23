@@ -15,7 +15,7 @@
             = link_to file.filename.to_s, url_for(file)
             - if current_user&.author?(file.record)
               =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
-      - if answer.links
+      - if answer.links.present?
         .links
           p Links:
           ul
