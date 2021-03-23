@@ -57,10 +57,11 @@ ActiveRecord::Schema.define(version: 2021_03_23_135012) do
   create_table "links", force: :cascade do |t|
     t.string "name"
     t.string "url"
-    t.bigint "question_id"
+    t.string "linkable_type"
+    t.bigint "linkable_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["question_id"], name: "index_links_on_question_id"
+    t.index ["linkable_type", "linkable_id"], name: "index_links_on_linkable"
   end
 
   create_table "questions", force: :cascade do |t|

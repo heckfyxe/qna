@@ -15,6 +15,12 @@
             = link_to file.filename.to_s, url_for(file)
             - if current_user&.author?(file.record)
               =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
+      - if answer.links
+        .links
+          p Links:
+          ul
+            - answer.links.each do |link|
+              li= link_to link.name, link.url
 
 = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
   p

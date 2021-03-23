@@ -7,7 +7,10 @@ class QuestionsController < ApplicationController
 
   def show
     @answers = question.answers
-    @answer ||= Answer.new
+    unless @answer
+      @answer = Answer.new
+      @answer.links.build
+    end
   end
 
   def new; end
@@ -63,4 +66,4 @@ class QuestionsController < ApplicationController
   def question_params
     params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url])
   end
-end
+  end
