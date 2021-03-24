@@ -7,19 +7,41 @@ feature 'User can add links to question', %q{
 } do
   given(:user) { create(:user) }
   given(:gist_url) { 'https://gist.github.com/vkurennov/743f9367caa1039874af5a2244e1b44c' }
+  given(:google_url) { 'https://google.com' }
 
-  scenario 'User adds link when asks question' do
+  background do
     sign_in(user)
     visit new_question_path
 
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
+  end
 
+  scenario 'User adds link when asks question' do
     fill_in 'Link name', with: 'My gist'
     fill_in 'Url', with: gist_url
 
     click_on 'Ask'
 
     expect(page).to have_link 'My gist', href: gist_url
+  end
+
+  scenario 'User adds several links when asks question', js: true do
+    all('.nested-fields').last.tap do |f|
+      f.fill_in 'Link name', with: 'My gist'
+      f.fill_in 'Url', with: gist_url
+    end
+
+    click_on 'Add link'
+
+    all('.nested-fields').last.tap do |l|
+      l.fill_in 'Link name', with: 'Google'
+      l.fill_in 'Url', with: google_url
+    end
+
+    click_on 'Ask'
+
+    expect(page).to have_link 'My gist', href: gist_url
+    expect(page).to have_link 'Google', href: google_url
   end
 end
