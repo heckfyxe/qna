@@ -12,8 +12,7 @@ p= question.body
   .links
     p Links:
     ul
-      - question.links.each do |link|
-        li= link_to link.name, link.url
+      =render partial: 'shared/link', collection: question.links
 
 h2 Answers
 .answers
