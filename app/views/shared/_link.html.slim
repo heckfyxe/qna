@@ -1,6 +1,0 @@
-- if github_gist?(link.url)
-  / script src="#{link.url}.js"
-  .gistLoad data-id="#{github_gist_id(link.url)}" id="gist-#{github_gist_id(link.url)}"
-    | Loading....
-- else
-  li= link_to link.name, link.url
