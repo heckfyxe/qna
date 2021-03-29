@@ -18,12 +18,12 @@ feature 'User can add links to question', %q{
   end
 
   scenario 'User adds link when asks question' do
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+    fill_in 'Link name', with: 'Google'
+    fill_in 'Url', with: google_url
 
     click_on 'Ask'
 
-    expect(page).to have_link 'My gist', href: gist_url
+    expect(page).to have_link 'Google', href: google_url
   end
 
   scenario 'User adds several links when asks question', js: true do
@@ -41,7 +41,16 @@ feature 'User can add links to question', %q{
 
     click_on 'Ask'
 
-    expect(page).to have_link 'My gist', href: gist_url
+    expect(page).to have_content 'hosted with ❤ by GitHub'
     expect(page).to have_link 'Google', href: google_url
+  end
+
+  scenario 'User adds link to github gist', js: true do
+    fill_in 'Link name', with: 'My gist'
+    fill_in 'Url', with: gist_url
+
+    click_on 'Ask'
+
+    expect(page).to have_content 'hosted with ❤ by GitHub'
   end
 end
