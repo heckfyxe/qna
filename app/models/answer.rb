@@ -11,7 +11,7 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validate :one_the_best_in_question
 
-  accepts_nested_attributes_for :links, reject_if: :all_blank
+  accepts_nested_attributes_for :links, allow_destroy: true, reject_if: :all_blank
 
   def mark_as_the_best
     transaction do

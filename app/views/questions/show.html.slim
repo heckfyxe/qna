@@ -22,18 +22,6 @@ h2 Answers
   = render 'shared/errors', resource: @answer
 
 = form_with model: [question, @answer], class: 'new-answer' do |f|
-  p
-    = f.label :body, "Answer"
-    = f.text_area :body
-  p
-    = f.label :files
-    = f.file_field :files, multiple: true, direct_upload: true
-
-  p Links:
-  p
-    = f.fields_for :links do |l|
-      = render 'link_fields', f: l
-
-  p = link_to_add_association 'Add link', f, :links
+  =render 'answers/answer_fields', f: f
 
   p = f.submit 'To answer'

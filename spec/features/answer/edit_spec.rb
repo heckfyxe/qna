@@ -26,7 +26,7 @@ feature 'User can edit his answer', %q{
 
     scenario 'edits his answer' do
       within '.answers' do
-        fill_in 'Your answer', with: 'edited answer'
+        fill_in 'Answer', with: 'edited answer'
         click_on 'Save'
 
         expect(page).to_not have_content answer.body
@@ -37,7 +37,7 @@ feature 'User can edit his answer', %q{
 
     scenario 'edits his answer with errors' do
       within '.answers' do
-        fill_in 'Your answer', with: ''
+        fill_in 'Answer', with: ''
         click_on 'Save'
       end
 
@@ -46,7 +46,7 @@ feature 'User can edit his answer', %q{
 
     scenario 'edits his answer and attach files' do
       within '.answers' do
-        fill_in 'Your answer', with: 'edited answer'
+        fill_in 'Answer', with: 'edited answer'
         attach_file 'Files', %W[#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb]
         click_on 'Save'
       end
