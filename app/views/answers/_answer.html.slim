@@ -19,7 +19,7 @@
         .links
           p Links:
           ul
-            =render partial: 'shared/link', collection: answer.links
+            =render answer.links
 
 = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
   p
