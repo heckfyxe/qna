@@ -7,13 +7,6 @@ p
   = render 'shared/errors', resource: question
 
   = form_with model: question, class: 'd-none', html: { id: "edit-question-#{question.id}" } do |f|
-    p
-      = f.label :title
-      = f.text_field :title
-    p
-      = f.label :body
-      = f.text_area :body
-    p
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
+    =render 'question_fields', f: f
+
     p = f.submit 'Update'

@@ -2,4 +2,5 @@ document.querySelector('.answer-errors').innerHTML = '<%= render 'shared/errors'
 
 <% unless @answer.errors.present? %>
   document.querySelector('.answers').innerHTML = '<%= j render question.answers %>'
+  initGist()
 <% end %>

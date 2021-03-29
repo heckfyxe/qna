@@ -22,10 +22,6 @@
             =render answer.links
 
 = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
-  p
-    = f.label :body, 'Your answer'
-    = f.text_area :body
-  p
-    = f.label :files
-    = f.file_field :files, multiple: true, direct_upload: true
+  =render 'answers/answer_fields', f: f
+
   = f.submit 'Save'
