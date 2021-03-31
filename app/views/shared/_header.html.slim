@@ -1,3 +1,6 @@
 - if current_user.present?
   nav class="navbar"
-    =link_to "Log out", destroy_user_session_path, class: "ml-auto", method: :delete
+    .ml-auto
+      - if current_user.present?
+        =link_to "Badges", badges_path, class: "mr-4"
+      =link_to "Log out", destroy_user_session_path, method: :delete

@@ -22,7 +22,7 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
-      render :new
+      render :create
     end
   end
 
@@ -58,12 +58,14 @@ class QuestionsController < ApplicationController
   def new_question
     question = Question.new
     question.links.build
+    question.build_badge
     question
   end
 
   helper_method :question
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:id, :name, :url, :_destroy])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: [:id, :name, :url, :_destroy],
+                                     badge_attributes: [:id, :title, :image])
   end
-  end
+end
