@@ -14,6 +14,12 @@ p= question.body
     ul
       =render question.links
 
+- if question.badge
+  p Badge for the best answer:
+  = render question.badge
+
+br
+
 h2 Answers
 .answers
   = render @answers

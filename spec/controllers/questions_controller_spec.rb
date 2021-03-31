@@ -10,13 +10,10 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :index }
 
     it 'populates an array of all questions' do
-      get :index
-
       expect(assigns(:questions)).to match_array(questions)
     end
 
     it 'renders index view' do
-      get :index
       expect(response).to render_template :index
     end
   end
@@ -59,12 +56,14 @@ RSpec.describe QuestionsController, type: :controller do
 
       context 'with invalid attributes' do
         it 'does not save the question' do
-          expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
+          expect {
+            post :create, params: { question: attributes_for(:question, :invalid) }, format: :js
+          }.to_not change(Question, :count)
         end
 
-        it 're-renders new view' do
-          post :create, params: { question: attributes_for(:question, :invalid) }
-          expect(response).to render_template :new
+        it 'renders create script' do
+          post :create, params: { question: attributes_for(:question, :invalid) }, format: :js
+          expect(response).to render_template :create
         end
       end
     end
