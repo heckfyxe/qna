@@ -1,4 +1,6 @@
-class Question < Linkable
+class Question < ApplicationRecord
+  include Linkable
+
   has_many :answers, dependent: :destroy
   has_one :badge, dependent: :destroy
 

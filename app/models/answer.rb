@@ -1,4 +1,6 @@
-class Answer < Linkable
+class Answer < ApplicationRecord
+  include Linkable
+
   default_scope -> { order(the_best: :desc, created_at: :asc) }
   scope :the_best, -> { where(the_best: true) }
 
@@ -13,13 +15,11 @@ class Answer < Linkable
   def mark_as_the_best
     transaction do
       answer = question.answers.the_best.limit(1).first
-      answer&.the_best = false
-      answer&.save!
+      answer&.update!(the_best: false)
 
       author.badges << question.badge if question.badge
 
-      self.the_best = true
-      save!
+      update!(the_best: true)
     end
   end
 
