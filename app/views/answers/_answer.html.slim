@@ -22,7 +22,7 @@
           ul
             =render answer.links
 
-= form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
-  =render 'answers/answer_fields', f: f
+  = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
+    =render 'answers/answer_fields', f: f
 
-  = f.submit 'Save'
+    = f.submit 'Save'
