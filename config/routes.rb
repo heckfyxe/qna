@@ -14,4 +14,12 @@ Rails.application.routes.draw do
   resources :files, only: :destroy
   resources :links, only: :destroy
   resources :badges, only: :index
+
+  concern :votable do
+    post :vote_up
+    post :vote_down
+  end
+
+  resources :questions, concerns: :votable, controller: :votes
+  resources :answers, concerns: :votable, controller: :votes
 end

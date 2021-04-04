@@ -16,7 +16,7 @@ RSpec.describe AnswersController, type: :controller do
                           question_id: question,
                           answer: attributes_for(:answer)
                         },
-                        format: :js
+                        format: :json
           }.to change(question.answers, :count).by(1)
         end
 
@@ -26,7 +26,7 @@ RSpec.describe AnswersController, type: :controller do
                           question_id: question,
                           answer: attributes_for(:answer)
                         },
-                        format: :js
+                        format: :json
           }.to change(question.answers, :count).by(1)
         end
       end
@@ -38,14 +38,14 @@ RSpec.describe AnswersController, type: :controller do
                           question_id: question,
                           answer: attributes_for(:answer, :invalid)
                         },
-                        format: :js
+                        format: :json
           }.to_not change(Answer, :count)
         end
       end
 
       it 'renders create' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
-        expect(response).to render_template :create
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :json
+        expect(response.body).to eq question.answers.last.to_json
       end
     end
 
