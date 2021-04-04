@@ -10,12 +10,19 @@
           '  The best answer!
         - else
           =< link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :post, remote: true
+
+      p id="answer-rating-#{answer.id}"= "Rating: #{answer.rating}"
+      - if current_user && !current_user.author?(answer)
+        = answer_vote_link('Vote up', true, answer, answer.user_vote(current_user) < 1)
+        =< answer_vote_link('Vote down', false, answer, answer.user_vote(current_user) > -1)
+
       - if answer.files.attached?
         - answer.files.each do |file|
           p.attachments id="file-#{file.id}"
             = link_to file.filename.to_s, url_for(file)
             - if current_user&.author?(file.record)
               =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
+
       - if answer.links.present?
         .links
           p Links:
@@ -26,3 +33,5 @@
     =render 'answers/answer_fields', f: f
 
     = f.submit 'Save'
+
+hr
