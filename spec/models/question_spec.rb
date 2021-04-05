@@ -15,4 +15,58 @@ RSpec.describe Question, type: :model do
   it 'have many attached files' do
     expect(Question.new.files).to be_an_instance_of ActiveStorage::Attached::Many
   end
+
+  describe '#vote_up' do
+    let(:author) { create(:user) }
+    let(:question) { create(:question, author: author) }
+    let(:user) { create(:user) }
+
+    it 'Author cannot vote' do
+      expect { question.vote_up(author) }.to_not change(Vote, :count)
+    end
+
+    it 'No author votes' do
+      expect { question.vote_up(user) }.to change(Vote, :count).by(1)
+    end
+  end
+
+  describe '#vote_down' do
+    let(:author) { create(:user) }
+    let(:question) { create(:question, author: author) }
+    let(:user) { create(:user) }
+
+    it 'Author cannot vote' do
+      expect { question.vote_down(author) }.to_not change(Vote, :count)
+    end
+
+    it 'No author votes' do
+      expect { question.vote_down(user) }.to change(Vote, :count).by(1)
+    end
+  end
+
+  describe '#rating' do
+    let(:question) { create(:question) }
+    let(:user) { create(:user) }
+    let(:another_user) { create(:user) }
+
+    it 'show total votes' do
+      question.vote_up(user)
+      question.vote_up(another_user)
+      question.reload
+      expect(question.rating).to eq 2
+    end
+  end
+
+  describe '#user_vote' do
+    let(:question) { create(:question) }
+    let(:user) { create(:user) }
+    let(:another_user) { create(:user) }
+
+    it "show user's vote" do
+      question.vote_up(user)
+      question.vote_up(another_user)
+      question.reload
+      expect(question.user_vote(user)).to eq 1
+    end
+  end
 end

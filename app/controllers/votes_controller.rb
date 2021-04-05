@@ -14,7 +14,7 @@ class VotesController < ApplicationController
   private
 
   def json_response(resource)
-    "{ \"resource_id\": #{resource.id}, \"rating\": #{resource.rating}, \"my_vote\": #{resource.user_vote(current_user)} }"
+    { resource_id: resource.id, rating: resource.rating, my_vote: resource.user_vote(current_user) }
   end
 
   def resource
