@@ -32,7 +32,6 @@ module Votable
   end
 
   def user_vote(user)
-    vote_val = votes.find_by(user: user)&.value
-    vote_val ? vote_val : 0
+    votes.find_by(user: user)&.value || 0
   end
 end

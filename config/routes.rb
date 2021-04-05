@@ -3,8 +3,13 @@ Rails.application.routes.draw do
 
   root to: 'questions#index'
 
-  resources :questions do
-    resources :answers, shallow: true, except: %i[index show new edit] do
+  concern :votable do
+    post :vote_up, controller: :votes
+    post :vote_down, controller: :votes
+  end
+
+  resources :questions, concerns: :votable do
+    resources :answers, concerns: :votable, shallow: true, except: %i[index show new edit] do
       member do
         post 'mark_as_the_best'
       end
@@ -14,12 +19,4 @@ Rails.application.routes.draw do
   resources :files, only: :destroy
   resources :links, only: :destroy
   resources :badges, only: :index
-
-  concern :votable do
-    post :vote_up
-    post :vote_down
-  end
-
-  resources :questions, concerns: :votable, controller: :votes
-  resources :answers, concerns: :votable, controller: :votes
 end
