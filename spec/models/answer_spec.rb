@@ -32,6 +32,7 @@ RSpec.describe Answer, type: :model do
 
     it 'No author votes' do
       expect { answer.vote_up(user) }.to change(Vote, :count).by(1)
+      expect(Vote.last.value).to eq 1
     end
   end
 
@@ -46,6 +47,7 @@ RSpec.describe Answer, type: :model do
 
     it 'No author votes' do
       expect { answer.vote_down(user) }.to change(Vote, :count).by(1)
+      expect(Vote.last.value).to eq -1
     end
   end
 
@@ -56,9 +58,19 @@ RSpec.describe Answer, type: :model do
 
     it 'show total votes' do
       answer.vote_up(user)
-      answer.vote_up(another_user)
       answer.reload
-      expect(answer.rating).to eq 2
+
+      expect(answer.rating).to eq 1
+
+      answer.vote_down(another_user)
+      answer.reload
+
+      expect(answer.rating).to eq 0
+
+      answer.vote_down(user)
+      answer.reload
+
+      expect(answer.rating).to eq -1
     end
   end
 
