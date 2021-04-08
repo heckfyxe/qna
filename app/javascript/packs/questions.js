@@ -1,3 +1,5 @@
+import {cable} from "./application";
+
 document.addEventListener('turbolinks:load', () => {
     var questions = document.querySelector('.questions')
     if (questions) {
@@ -11,28 +13,43 @@ document.addEventListener('turbolinks:load', () => {
         })
     }
 
-    document.querySelectorAll('.vote-question').forEach((element) => {
-        element.addEventListener('ajax:success', (e) => {
-            var response = e.detail[0]
-            var rating = response.rating
-            var my_vote = response.my_vote
+    var voteQuestions = document.querySelectorAll('.vote-question')
+    if (voteQuestions) {
+        voteQuestions.forEach((element) => {
+            element.addEventListener('ajax:success', (e) => {
+                var response = e.detail[0]
+                var rating = response.rating
+                var my_vote = response.my_vote
 
-            document.querySelector('#question-rating').innerHTML = 'Rating: ' + rating
+                document.querySelector('#question-rating').innerHTML = 'Rating: ' + rating
 
-            vote_up = document.querySelectorAll('.vote-question')[0]
-            vote_down = document.querySelectorAll('.vote-question')[1]
-            if (my_vote < 1) {
-                vote_up.classList.remove('invisible')
-            }
-            if (my_vote > -1) {
-                vote_down.classList.remove('invisible')
-            }
-            if (my_vote == 1) {
-                vote_up.classList.add('invisible')
-            }
-            if (my_vote == -1) {
-                vote_down.classList.add('invisible')
+                var vote_up = document.querySelectorAll('.vote-question')[0]
+                var vote_down = document.querySelectorAll('.vote-question')[1]
+                if (my_vote < 1) {
+                    vote_up.classList.remove('invisible')
+                }
+                if (my_vote > -1) {
+                    vote_down.classList.remove('invisible')
+                }
+                if (my_vote == 1) {
+                    vote_up.classList.add('invisible')
+                }
+                if (my_vote == -1) {
+                    vote_down.classList.add('invisible')
+                }
+            })
+        })
+    }
+
+    if (questions) {
+        cable.subscriptions.create('QuestionsChannel', {
+            connected() {
+                console.log('Connected!')
+            },
+            received(data) {
+                console.log(data)
+                document.querySelector('.questions').innerHTML += data
             }
         })
-    })
+    }
 })
