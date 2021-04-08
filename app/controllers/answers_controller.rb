@@ -1,6 +1,8 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
+  after_action :publish_answer, only: :create
+
   def create
     @answer = question.answers.build(answer_params)
     @answer.author = current_user
@@ -40,6 +42,9 @@ class AnswersController < ApplicationController
 
   private
 
+  helper_method :question
+  helper_method :answer
+
   def question
     @question ||= params[:question_id] ? Question.find(params[:question_id]) : answer.question
   end
@@ -48,10 +53,18 @@ class AnswersController < ApplicationController
     @answer ||= params[:id] ? Answer.with_attached_files.find(params[:id]) : Answer.new
   end
 
-  helper_method :question
-  helper_method :answer
-
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: [:id, :name, :url, :_destroy])
+  end
+
+  def publish_answer
+    message = ->(user) { AnswersController.render(
+      partial: 'answers/answer',
+      locals: {
+        question: answer.question,
+        answer: answer,
+        current_user: user }
+    ) }
+    AnswersChannel.broadcast_except_user(current_user, &message)
   end
 end
