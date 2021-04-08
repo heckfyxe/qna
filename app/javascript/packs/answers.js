@@ -60,11 +60,7 @@ document.addEventListener('turbolinks:load', () => {
 
     if (answers) {
         cable.subscriptions.create('AnswersChannel', {
-            connected() {
-                console.log('Connected!')
-            },
             received(data) {
-                console.log(data)
                 answers.innerHTML += data
             }
         })
