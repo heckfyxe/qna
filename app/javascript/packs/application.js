@@ -15,7 +15,10 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import "@oddcamp/cocoon-vanilla-js"
 import 'jquery'
+import consumer from "../channels/consumer";
 
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+export const cable = cable || consumer

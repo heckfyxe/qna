@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
+  after_action :publish_question, only: :create
+
   def index
     @questions = Question.all
   end
@@ -67,5 +69,14 @@ class QuestionsController < ApplicationController
   def question_params
     params.require(:question).permit(:title, :body, files: [], links_attributes: [:id, :name, :url, :_destroy],
                                      badge_attributes: [:id, :title, :image])
+  end
+
+  def publish_question
+    return if question.errors.any?
+
+    message = ->(user) {
+      QuestionsController.render(partial: 'questions/question', locals: { question: question, current_user: user })
+    }
+    QuestionsChannel.broadcast_except_user(current_user, &message)
   end
 end
