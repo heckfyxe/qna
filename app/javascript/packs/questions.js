@@ -43,11 +43,7 @@ document.addEventListener('turbolinks:load', () => {
 
     if (questions) {
         cable.subscriptions.create('QuestionsChannel', {
-            connected() {
-                console.log('Connected!')
-            },
             received(data) {
-                console.log(data)
                 document.querySelector('.questions').innerHTML += data
             }
         })
