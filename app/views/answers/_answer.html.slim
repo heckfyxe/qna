@@ -27,10 +27,19 @@
         .links
           p Links:
           ul
-            =render answer.links
+            = render answer.links
+      b= 'Comments'
+      .answer-comments *{ data: { 'answer-id': answer.id } }
+        = render answer.comments
+      - if current_user
+        .answer-comment-errors
+        = form_with model: [answer, Comment.new], class: 'new-answer-comment' do |f|
+          = f.label :body
+          = f.text_field :body
+          = f.submit 'Comment'
 
   = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
-    =render 'answers/answer_fields', f: f
+    = render 'answers/answer_fields', f: f
 
     = f.submit 'Save'
 

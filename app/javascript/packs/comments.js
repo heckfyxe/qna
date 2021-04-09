@@ -1,22 +1,36 @@
 import {cable} from "./application";
 
 document.addEventListener('turbolinks:load', () => {
-    var commentForm = document.querySelector('form.new-question-comment')
-    if (commentForm) {
-        commentForm.addEventListener('ajax:success', (e) => {
-            console.log(e)
+    var commentQuestionForm = document.querySelector('form.new-question-comment')
+    if (commentQuestionForm) {
+        commentQuestionForm.addEventListener('ajax:success', (e) => {
             var comment = e.detail[2].responseText
 
             document.querySelector('.question-comment-errors').innerHTML = ''
             document.querySelector('.question-comments').innerHTML += comment
         })
 
-        commentForm.addEventListener('ajax:error', (e) => {
+        commentQuestionForm.addEventListener('ajax:error', (e) => {
             var errors = e.detail[2].responseText
 
             document.querySelector('.question-comment-errors').innerHTML = errors
         })
     }
+
+    document.querySelectorAll('form.new-answer-comment').forEach((commentAnswerForm) => {
+        commentAnswerForm.addEventListener('ajax:success', (e) => {
+            var comment = e.detail[2].responseText
+
+            commentAnswerForm.parentNode.querySelector('.answer-comment-errors').innerHTML = ''
+            commentAnswerForm.parentNode.querySelector('.answer-comments').innerHTML += comment
+        })
+
+        commentAnswerForm.addEventListener('ajax:error', (e) => {
+            var errors = e.detail[2].responseText
+
+            commentAnswerForm.parentNode.querySelector('.answer-comment-errors').innerHTML = errors
+        })
+    })
 
     var questionIdElement = document.querySelector('#question-id')
     if (questionIdElement) {
@@ -32,6 +46,8 @@ document.addEventListener('turbolinks:load', () => {
                 var data = JSON.parse(json)
                 if (data.type === 'Question') {
                     questionComments.innerHTML += data.content
+                } else if (data.type === 'Answer') {
+                    document.querySelector('.answer-comments[data-answer-id="' + data.id + '"]').innerHTML += data.content
                 }
             }
         })
