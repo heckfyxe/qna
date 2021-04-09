@@ -42,7 +42,6 @@ document.addEventListener('turbolinks:load', () => {
             question_id: questionId
         }, {
             received(json) {
-                console.log(json)
                 var data = JSON.parse(json)
                 if (data.type === 'Question') {
                     questionComments.innerHTML += data.content
