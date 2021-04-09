@@ -65,6 +65,6 @@ class AnswersController < ApplicationController
         answer: answer,
         current_user: user }
     ) }
-    AnswersChannel.broadcast_except_user(current_user, &message)
+    AnswersChannel.broadcast_except_user(current_user, { question_id: question.id }, &message)
   end
 end

@@ -77,6 +77,6 @@ class QuestionsController < ApplicationController
     message = ->(user) {
       QuestionsController.render(partial: 'questions/question', locals: { question: question, current_user: user })
     }
-    QuestionsChannel.broadcast_except_user(current_user, &message)
+    QuestionsChannel.broadcast_except_user(current_user, {}, &message)
   end
 end

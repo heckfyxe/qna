@@ -1,27 +1,39 @@
 .question
-h1= question.title
-p#question-rating= "Rating: #{question.rating}"
-- if current_user && !current_user.author?(question)
-  = question_vote_link('Vote up', true, question, question.user_vote(current_user) < 1)
-  =< question_vote_link('Vote down', false, question, question.user_vote(current_user) > -1)
-p= question.body
+  p#question-id class='d-none' = question.id
+  h1= question.title
+  p#question-rating= "Rating: #{question.rating}"
+  - if current_user && !current_user.author?(question)
+    = question_vote_link('Vote up', true, question, question.user_vote(current_user) < 1)
+    =< question_vote_link('Vote down', false, question, question.user_vote(current_user) > -1)
+  p= question.body
 
-- if question.files.attached?
-  - question.files.each do |file|
-    p id="file-#{file.id}"
-      = link_to file.filename.to_s, url_for(file)
-      - if current_user&.author?(file.record)
-        =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
+  - if question.files.attached?
+    - question.files.each do |file|
+      p id="file-#{file.id}"
+        = link_to file.filename.to_s, url_for(file)
+        - if current_user&.author?(file.record)
+          =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
 
-- if question.links.present?
-  .links
-    p Links:
-    ul
-      = render question.links
+  - if question.links.present?
+    .links
+      p Links:
+      ul
+        = render question.links
 
-- if question.badge
-  p Badge for the best answer:
-  = render question.badge
+  - if question.badge
+    p Badge for the best answer:
+    = render question.badge
+
+  h2= 'Comments'
+  .question-comments
+    = render question.comments
+  - if current_user
+    .question-comment-errors
+      = render 'shared/errors', resource: @answer
+    = form_with model: [question, Comment.new], class: 'new-question-comment' do |f|
+      = f.label :body
+      = f.text_field :body
+      = f.submit 'Comment'
 
 br
 

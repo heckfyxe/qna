@@ -59,7 +59,11 @@ document.addEventListener('turbolinks:load', () => {
     })
 
     if (answers) {
-        cable.subscriptions.create('AnswersChannel', {
+        var questionId = parseInt(document.querySelector('#question-id').textContent)
+        cable.subscriptions.create({
+            channel: "AnswersChannel",
+            question_id: questionId
+        }, {
             received(data) {
                 answers.innerHTML += data
             }
