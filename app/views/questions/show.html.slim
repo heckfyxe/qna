@@ -29,7 +29,6 @@
     = render question.comments
   - if current_user
     .question-comment-errors
-      = render 'shared/errors', resource: @answer
     = form_with model: [question, Comment.new], class: 'new-question-comment' do |f|
       = f.label :body
       = f.text_field :body
