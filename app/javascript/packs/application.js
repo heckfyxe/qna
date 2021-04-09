@@ -8,6 +8,7 @@
 require('packs/answers')
 require('packs/questions')
 require('packs/gist_loader')
+require('packs/comments')
 
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"

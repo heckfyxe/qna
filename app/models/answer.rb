@@ -1,12 +1,13 @@
 class Answer < ApplicationRecord
   include Linkable
   include Votable
+  include HasAuthor
+  include Commentable
 
   default_scope -> { order(the_best: :desc, created_at: :asc) }
   scope :the_best, -> { where(the_best: true) }
 
   belongs_to :question
-  belongs_to :author, class_name: 'User', foreign_key: :author_id
 
   has_many_attached :files
 
