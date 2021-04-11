@@ -26,11 +26,7 @@ RSpec.describe Answer, type: :model do
     let(:answer) { create(:answer, author: author) }
     let(:user) { create(:user) }
 
-    it 'Author cannot vote' do
-      expect { answer.vote_up(author) }.to_not change(Vote, :count)
-    end
-
-    it 'No author votes' do
+    it 'User votes' do
       expect { answer.vote_up(user) }.to change(Vote, :count).by(1)
       expect(Vote.last.value).to eq 1
     end
@@ -41,11 +37,7 @@ RSpec.describe Answer, type: :model do
     let(:answer) { create(:answer, author: author) }
     let(:user) { create(:user) }
 
-    it 'Author cannot vote' do
-      expect { answer.vote_down(author) }.to_not change(Vote, :count)
-    end
-
-    it 'No author votes' do
+    it 'User votes' do
       expect { answer.vote_down(user) }.to change(Vote, :count).by(1)
       expect(Vote.last.value).to eq -1
     end

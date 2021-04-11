@@ -1,6 +1,6 @@
 - if current_user.present?
   nav class="navbar"
     .ml-auto
-      - if current_user.present?
+      - if can? :read, Badge
         =link_to "Badges", badges_path, class: "mr-4"
       =link_to "Log out", destroy_user_session_path, method: :delete

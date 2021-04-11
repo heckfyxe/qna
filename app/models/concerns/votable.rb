@@ -6,8 +6,6 @@ module Votable
   end
 
   def vote_up(user)
-    return if user.author?(self)
-
     vote = votes.find_by(user: user)
     if vote
       vote.update(value: vote.value + 1)
@@ -17,8 +15,6 @@ module Votable
   end
 
   def vote_down(user)
-    return if user.author?(self)
-
     vote = votes.find_by(user: user)
     if vote
       vote.update(value: vote.value - 1)

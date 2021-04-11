@@ -2,17 +2,18 @@
   *the_best_answer_class(answer)
     p
       = answer.body
-      - if current_user&.author?(answer)
+      - if can? :update, answer
         =< link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      - if can? :destroy, answer
         =< link_to 'Delete', answer_path(answer), method: :delete, remote: true
-      - if current_user&.author?(question)
-        - if answer.the_best?
-          '  The best answer!
-        - else
+      - if answer.the_best?
+        '  The best answer!
+      - else
+        - if can? :mark_as_the_best, answer
           =< link_to 'Mark as the best answer', mark_as_the_best_answer_path(answer), method: :post, remote: true
 
       p id="answer-rating-#{answer.id}"= "Rating: #{answer.rating}"
-      - if current_user && !current_user.author?(answer)
+      - if can? :vote, answer
         = answer_vote_link('Vote up', true, answer, answer.user_vote(current_user) < 1)
         =< answer_vote_link('Vote down', false, answer, answer.user_vote(current_user) > -1)
 
@@ -20,7 +21,7 @@
         - answer.files.each do |file|
           p.attachments id="file-#{file.id}"
             = link_to file.filename.to_s, url_for(file)
-            - if current_user&.author?(file.record)
+            - if can? :update, file.record
               =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
 
       - if answer.links.present?
@@ -28,15 +29,16 @@
           p Links:
           ul
             = render answer.links
-      b= 'Comments'
-      .answer-comments *{ data: { 'answer-id': answer.id } }
-        = render answer.comments
-      - if current_user
-        .answer-comment-errors
-        = form_with model: [answer, Comment.new], class: 'new-answer-comment' do |f|
-          = f.label :body
-          = f.text_field :body
-          = f.submit 'Comment'
+      p
+        b= 'Comments'
+        .answer-comments *{ data: { 'answer-id': answer.id } }
+          = render answer.comments
+        - if can? :create, Comment
+          .answer-comment-errors
+          = form_with model: [answer, Comment.new], class: 'new-answer-comment' do |f|
+            = f.label :body
+            = f.text_field :body
+            = f.submit 'Comment'
 
   = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" } do |f|
     = render 'answers/answer_fields', f: f

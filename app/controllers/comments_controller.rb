@@ -5,6 +5,8 @@ class CommentsController < ApplicationController
 
   after_action :publish_comment, only: :create
 
+  authorize_resource
+
   def create
     @comment = parent_model.comments.build(comment_params)
     @comment.author = current_user

@@ -3,10 +3,7 @@ class FilesController < ApplicationController
 
   def destroy
     @file = ActiveStorage::Attachment.find(params[:id])
-    if current_user.author?(@file.record)
-      @file.purge
-    else
-      flash[:alert] = "You aren't the author of the question!"
-    end
+    authorize! :update, @file.record
+    @file.purge
   end
 end

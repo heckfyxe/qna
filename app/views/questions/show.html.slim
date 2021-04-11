@@ -2,7 +2,7 @@
   p#question-id class='d-none' = question.id
   h1= question.title
   p#question-rating= "Rating: #{question.rating}"
-  - if current_user && !current_user.author?(question)
+  - if can? :vote, question
     = question_vote_link('Vote up', true, question, question.user_vote(current_user) < 1)
     =< question_vote_link('Vote down', false, question, question.user_vote(current_user) > -1)
   p= question.body
@@ -11,7 +11,7 @@
     - question.files.each do |file|
       p id="file-#{file.id}"
         = link_to file.filename.to_s, url_for(file)
-        - if current_user&.author?(file.record)
+        - if can? :update, file.record
           =< link_to 'Delete', file_path(file.id), method: :delete, remote: true
 
   - if question.links.present?
@@ -24,10 +24,11 @@
     p Badge for the best answer:
     = render question.badge
 
+  p
   h2= 'Comments'
   .question-comments
     = render question.comments
-  - if current_user
+  - if can? :create, Comment
     .question-comment-errors
     = form_with model: [question, Comment.new], class: 'new-question-comment' do |f|
       = f.label :body
@@ -40,10 +41,11 @@ h2 Answers
 .answers
   = render @answers
 
-.answer-errors
-  = render 'shared/errors', resource: @answer
+- if can? :create, Answer
+  .answer-errors
+    = render 'shared/errors', resource: @answer
 
-= form_with model: [question, @answer], class: 'new-answer', data: { type: :json } do |f|
-  = render 'answers/answer_fields', f: f
+  = form_with model: [question, @answer], class: 'new-answer', data: { type: :json } do |f|
+    = render 'answers/answer_fields', f: f
 
-  p = f.submit 'To answer'
+    p = f.submit 'To answer'

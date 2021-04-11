@@ -3,6 +3,9 @@ class AnswersController < ApplicationController
 
   after_action :publish_answer, only: :create
 
+  before_action :answer, only: %i[show edit update destroy mark_as_the_best]
+  authorize_resource
+
   def create
     @answer = question.answers.build(answer_params)
     @answer.author = current_user
@@ -17,27 +20,15 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if current_user.author?(answer)
-      answer.update(answer_params)
-    else
-      flash[:alert] = "You aren't the author of the answer!"
-    end
+    answer.update(answer_params)
   end
 
   def mark_as_the_best
-    if current_user.author?(question)
-      answer.mark_as_the_best
-    else
-      flash[:alert] = "You aren't the author of the question!"
-    end
+    answer.mark_as_the_best
   end
 
   def destroy
-    if current_user.author?(answer)
-      answer.destroy
-    else
-      flash[:alert] = "You aren't the author of the answer!"
-    end
+    answer.destroy
   end
 
   private
@@ -58,6 +49,17 @@ class AnswersController < ApplicationController
   end
 
   def publish_answer
+    return if answer.errors.any?
+
+    self.class.renderer.instance_variable_set(
+      :@env, {
+      "HTTP_HOST" => "localhost:3000",
+      "HTTPS" => "off",
+      "REQUEST_METHOD" => "GET",
+      "SCRIPT_NAME" => "",
+      "warden" => warden
+    })
+
     message = ->(user) { AnswersController.render(
       partial: 'answers/answer',
       locals: {

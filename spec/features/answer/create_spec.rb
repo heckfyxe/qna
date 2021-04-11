@@ -65,10 +65,6 @@ feature 'User can answer the question', %q{
   scenario 'Unauthenticated user tries to answer' do
     visit question_path(question)
 
-    answer_text = 'Smart answer to question'
-    fill_in 'Answer', with: answer_text
-    click_on 'To answer'
-
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).to_not have_content 'To answer'
   end
 end

@@ -2,6 +2,9 @@ class VotesController < ApplicationController
   include HasParentModel
 
   before_action :authenticate_user!
+  before_action do
+    authorize! :vote, parent_model
+  end
 
   def vote_up
     parent_model.vote_up(current_user)

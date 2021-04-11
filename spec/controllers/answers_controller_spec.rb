@@ -50,40 +50,47 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      context 'author with valid params' do
+      context 'author with' do
         let(:answer) { create(:answer, author: user) }
 
-        it 'changes answer attributes' do
-          patch :update, params: { id: answer, answer: { body: 'new_title' } }, format: :js
-          answer.reload
+        context 'valid params' do
+          it 'changes answer attributes' do
+            patch :update, params: { id: answer, answer: { body: 'new_title' } }, format: :js
+            answer.reload
 
-          expect(answer.body).to eq 'new_title'
+            expect(answer.body).to eq 'new_title'
+          end
+
+          it 'renders update view' do
+            patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
+            expect(response).to render_template :update
+          end
+        end
+
+        context 'invalid params' do
+          before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js }
+
+          it 'does not change answer' do
+            text = answer.body
+            answer.reload
+
+            expect(answer.body).to eq text
+          end
         end
       end
 
-      context 'no author with valid params' do
+      context 'no author' do
         it 'not changes answer attributes' do
           patch :update, params: { id: answer, answer: { body: 'new_title' } }, format: :js
           answer.reload
 
           expect(answer.body).to_not eq 'new_title'
         end
-      end
 
-      context 'invalid params' do
-        before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js }
-
-        it 'does not change answer' do
-          text = answer.body
-          answer.reload
-
-          expect(answer.body).to eq text
+        it 'redirect to root' do
+          patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
+          expect(response).to redirect_to root_path
         end
-      end
-
-      it 'renders update view' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
-        expect(response).to render_template :update
       end
     end
 
@@ -104,9 +111,9 @@ RSpec.describe AnswersController, type: :controller do
         end
       end
 
-      it 'renders destroy script' do
+      it 'redirect to root' do
         delete :destroy, params: { id: answer }, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -126,6 +133,11 @@ RSpec.describe AnswersController, type: :controller do
           expect(the_best_answer.the_best?).to be_falsey
           expect(answer.the_best?).to be_truthy
         end
+
+        it 'renders mark_as_the_best script' do
+          post :mark_as_the_best, params: { id: answer }, format: :js
+          expect(response).to render_template :mark_as_the_best
+        end
       end
 
       context "No author of question" do
@@ -134,11 +146,11 @@ RSpec.describe AnswersController, type: :controller do
         it "cannot choose the best answer" do
           expect { post :mark_as_the_best, params: { id: answer }, format: :js }.to_not change(Answer.the_best, :ids)
         end
-      end
 
-      it 'renders mark_as_the_best script' do
-        post :mark_as_the_best, params: { id: answer }, format: :js
-        expect(response).to render_template :mark_as_the_best
+        it 'redirect to root' do
+          post :mark_as_the_best, params: { id: answer }, format: :js
+          expect(response).to redirect_to root_path
+        end
       end
     end
   end
