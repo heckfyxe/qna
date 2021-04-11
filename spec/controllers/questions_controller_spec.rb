@@ -36,9 +36,20 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'GET #edit' do
-      it 'renders edit view' do
-        get :edit, params: { id: question }
-        expect(response).to render_template :edit
+      context 'Author' do
+        let(:question) { create(:question, author: user) }
+
+        it 'renders edit view' do
+          get :edit, params: { id: question }
+          expect(response).to render_template :edit
+        end
+      end
+
+      context 'no author' do
+        it 'redirect to root' do
+          get :edit, params: { id: question }
+          expect(response).to redirect_to root_path
+        end
       end
     end
 
@@ -97,7 +108,7 @@ RSpec.describe QuestionsController, type: :controller do
           expect(assigns(:question)).to eq question
         end
 
-        it 'changes question attributes' do
+        it 'cannot change question attributes' do
           title = question.title
           body = question.body
 
@@ -106,11 +117,6 @@ RSpec.describe QuestionsController, type: :controller do
 
           expect(question.title).to eq title
           expect(question.body).to eq body
-        end
-
-        it 'renders update script' do
-          patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
-          expect(response).to render_template :update
         end
       end
 
@@ -125,10 +131,11 @@ RSpec.describe QuestionsController, type: :controller do
           expect(question.title).to eq title
           expect(question.body).to eq body
         end
+      end
 
-        it 'renders update script' do
-          expect(response).to render_template :update
-        end
+      it 'redirects to root' do
+        patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -149,9 +156,9 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      it 'redirects to index' do
+      it 'redirects to root' do
         delete :destroy, params: { id: question }
-        expect(response).to redirect_to questions_path
+        expect(response).to redirect_to root_path
       end
     end
   end

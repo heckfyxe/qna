@@ -10,13 +10,8 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
 
-  let(:author_question) { create(:question) }
-  let(:user) { create(:user, questions: [author_question]) }
+  let(:user) { create(:user) }
+  let(:author_question) { create(:question, author: user) }
 
   let(:question) { create(:question) }
-
-  describe '#author?' do
-    it { expect(user).to be_author(author_question) }
-    it { expect(user).to_not be_author(question) }
-  end
 end

@@ -3,10 +3,10 @@ div id="link-#{link.id}"
     / script src="#{link.url}.js"
     .gistLoad data-id="#{github_gist_id(link.url)}" id="gist-#{github_gist_id(link.url)}"
       | Loading....
-    - if current_user&.author?(link.linkable)
+    - if can? :destroy, link
       =link_to 'Delete', link_path(link), method: :delete, remote: true
   - else
     li
       =link_to link.name, link.url
-      - if current_user&.author?(link.linkable)
+      - if can? :destroy, link
         =<link_to 'Delete', link_path(link), method: :delete, remote: true

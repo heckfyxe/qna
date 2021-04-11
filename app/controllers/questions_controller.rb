@@ -1,7 +1,10 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
+  before_action :question, only: %i[show edit update destroy]
 
   after_action :publish_question, only: :create
+
+  authorize_resource
 
   def index
     @questions = Question.all
@@ -29,11 +32,6 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    unless current_user.author?(question)
-      flash[:alert] = "You aren't the author of the question!" unless current_user.author?(question)
-      render :update and return
-    end
-
     if question.update(question_params)
       redirect_to question
     else
@@ -42,12 +40,8 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.author?(question)
-      question.destroy
-      flash[:notice] = 'Question successfully deleted.'
-    else
-      flash[:alert] = "You aren't the author of the question!"
-    end
+    question.destroy
+    flash[:notice] = 'Question successfully deleted.'
     redirect_to questions_path
   end
 
@@ -73,6 +67,15 @@ class QuestionsController < ApplicationController
 
   def publish_question
     return if question.errors.any?
+
+    self.class.renderer.instance_variable_set(
+      :@env, {
+      "HTTP_HOST" => "localhost:3000",
+      "HTTPS" => "off",
+      "REQUEST_METHOD" => "GET",
+      "SCRIPT_NAME" => "",
+      "warden" => warden
+    })
 
     message = ->(user) {
       QuestionsController.render(partial: 'questions/question', locals: { question: question, current_user: user })
