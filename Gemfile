@@ -29,17 +29,13 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'slim-rails'
 gem 'devise'
-
 gem 'bootstrap', '~> 4.2.1'
 gem 'jquery-rails'
-
 gem "aws-sdk-s3", require: false
-
 gem "cocoon"
-
 gem 'image_processing'
-
 gem 'cancancan'
+gem 'doorkeeper'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
