@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   it { should belong_to :question }
-  it { should belong_to(:author).class_name('User').with_foreign_key('author_id') }
-  it { should have_many(:links).dependent(:destroy) }
+  it_behaves_like 'has author model'
+  it_behaves_like 'linkable model'
+  it_behaves_like 'commentable model'
 
   it { should validate_presence_of :body }
   it 'validates one the best answer for question' do
@@ -15,67 +16,15 @@ RSpec.describe Answer, type: :model do
   end
 
   it 'have many attached files' do
-    expect(Question.new.files).to be_an_instance_of ActiveStorage::Attached::Many
+    expect(Answer.new.files).to be_an_instance_of ActiveStorage::Attached::Many
   end
 
-  it { should accept_nested_attributes_for :links }
-
-
-  describe '#vote_up' do
+  context 'votes' do
     let(:author) { create(:user) }
-    let(:answer) { create(:answer, author: author) }
-    let(:user) { create(:user) }
-
-    it 'User votes' do
-      expect { answer.vote_up(user) }.to change(Vote, :count).by(1)
-      expect(Vote.last.value).to eq 1
-    end
-  end
-
-  describe '#vote_down' do
-    let(:author) { create(:user) }
-    let(:answer) { create(:answer, author: author) }
-    let(:user) { create(:user) }
-
-    it 'User votes' do
-      expect { answer.vote_down(user) }.to change(Vote, :count).by(1)
-      expect(Vote.last.value).to eq -1
-    end
-  end
-
-  describe '#rating' do
-    let(:answer) { create(:answer) }
     let(:user) { create(:user) }
     let(:another_user) { create(:user) }
+    let(:model) { create(:answer, author: author) }
 
-    it 'show total votes' do
-      answer.vote_up(user)
-      answer.reload
-
-      expect(answer.rating).to eq 1
-
-      answer.vote_down(another_user)
-      answer.reload
-
-      expect(answer.rating).to eq 0
-
-      answer.vote_down(user)
-      answer.reload
-
-      expect(answer.rating).to eq -1
-    end
-  end
-
-  describe '#user_vote' do
-    let(:answer) { create(:answer) }
-    let(:user) { create(:user) }
-    let(:another_user) { create(:user) }
-
-    it "show user's vote" do
-      answer.vote_up(user)
-      answer.vote_up(another_user)
-      answer.reload
-      expect(answer.user_vote(user)).to eq 1
-    end
+    it_behaves_like 'votable model'
   end
 end
