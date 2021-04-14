@@ -87,9 +87,9 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer.body).to_not eq 'new_title'
         end
 
-        it 'redirect to root' do
+        it 'renders js alert' do
           patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
-          expect(response).to redirect_to root_path
+          expect(response.body).to eq "alert('You are not authorized to access this page.')"
         end
       end
     end
@@ -111,9 +111,9 @@ RSpec.describe AnswersController, type: :controller do
         end
       end
 
-      it 'redirect to root' do
+      it 'render js alert' do
         delete :destroy, params: { id: answer }, format: :js
-        expect(response).to redirect_to root_path
+        expect(response.body).to eq "alert('You are not authorized to access this page.')"
       end
     end
 
@@ -147,9 +147,9 @@ RSpec.describe AnswersController, type: :controller do
           expect { post :mark_as_the_best, params: { id: answer }, format: :js }.to_not change(Answer.the_best, :ids)
         end
 
-        it 'redirect to root' do
+        it 'renders js alert' do
           post :mark_as_the_best, params: { id: answer }, format: :js
-          expect(response).to redirect_to root_path
+          expect(response.body).to eq "alert('You are not authorized to access this page.')"
         end
       end
     end
