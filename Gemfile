@@ -29,15 +29,15 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'slim-rails'
 gem 'devise'
-
 gem 'bootstrap', '~> 4.2.1'
 gem 'jquery-rails'
-
 gem "aws-sdk-s3", require: false
-
 gem "cocoon"
-
 gem 'image_processing'
+gem 'cancancan'
+gem 'doorkeeper'
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'oj'
 
 gem 'cancancan'
 

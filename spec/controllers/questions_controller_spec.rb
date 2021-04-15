@@ -133,9 +133,9 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      it 'redirects to root' do
+      it 'renders js alert' do
         patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
-        expect(response).to redirect_to root_path
+        expect(response.body).to eq "alert('You are not authorized to access this page.')"
       end
     end
 
