@@ -3,6 +3,9 @@ require 'rails_helper'
 RSpec.describe Question, type: :model do
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_one(:badge).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
+  it { should have_many(:subscribers).through(:subscriptions).source(:user) }
+
   it_behaves_like 'has author model'
   it_behaves_like 'linkable model'
   it_behaves_like 'commentable model'
@@ -24,4 +27,6 @@ RSpec.describe Question, type: :model do
 
     it_behaves_like 'votable model'
   end
+
+  it { expect(subject.subscribers.first).to eq subject.author }
 end

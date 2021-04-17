@@ -14,6 +14,8 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validate :one_the_best_in_question
 
+  after_create :notify_subscribers
+
   def mark_as_the_best
     transaction do
       answer = question.answers.the_best.limit(1).first
@@ -29,5 +31,9 @@ class Answer < ApplicationRecord
 
   def one_the_best_in_question
     errors.add(:base, 'Question can have only one the best answer') unless question && question.answers.the_best.count <= 1
+  end
+
+  def notify_subscribers
+    NotifySubscribersJob.perform_later(question)
   end
 end

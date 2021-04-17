@@ -27,4 +27,13 @@ RSpec.describe Answer, type: :model do
 
     it_behaves_like 'votable model'
   end
+
+  context 'subscribers' do
+    let(:answer) { build(:answer) }
+
+    it 'notifies subscribers' do
+      expect(NotifySubscribersJob).to receive(:perform_later).with(answer.question)
+      answer.save!
+    end
+  end
 end
