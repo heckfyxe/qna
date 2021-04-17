@@ -37,5 +37,8 @@ class Ability
     can :vote, [Question, Answer] do |model|
       model.author_id != user.id
     end
+
+    can :subscribe, Question
+    can :unsubscribe, Question
   end
 end
