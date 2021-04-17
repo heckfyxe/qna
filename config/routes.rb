@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   use_doorkeeper
   devise_for :users
@@ -26,6 +28,9 @@ Rails.application.routes.draw do
   resources :badges, only: :index
 
   mount ActionCable.server => '/cable'
+  authenticate :user, ->(user) { user.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   namespace :api do
     namespace :v1 do
