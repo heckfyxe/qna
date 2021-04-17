@@ -56,5 +56,8 @@ describe Ability do
 
     it { should be_able_to :vote, create(:question, author: other) }
     it { should be_able_to :vote, create(:answer, author: other) }
+
+    it { should be_able_to :subscribe, create(:question) }
+    it { should be_able_to :unsubscribe, create(:question) }
   end
 end

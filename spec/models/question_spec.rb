@@ -28,5 +28,15 @@ RSpec.describe Question, type: :model do
     it_behaves_like 'votable model'
   end
 
-  it { expect(subject.subscribers.first).to eq subject.author }
+  context 'subscriptions' do
+    let!(:question) { create(:question) }
+
+    it { expect(question.subscribers.first).to eq question.author }
+
+    it { expect { question.subscribe(create(:user)) }.to change(Subscription, :count).by(1) }
+    it { expect { question.unsubscribe(question.author) }.to change(Subscription, :count).by(-1) }
+
+    it { expect(question).to be_subscribed_by question.author }
+    it { expect(question).to_not be_subscribed_by create(:user) }
+  end
 end

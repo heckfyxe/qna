@@ -18,6 +18,18 @@ class Question < ApplicationRecord
 
   after_create :add_author_to_subscribers
 
+  def subscribe(user)
+    subscribers << user
+  end
+
+  def unsubscribe(user)
+    subscribers.delete(user)
+  end
+
+  def subscribed_by?(user)
+    subscribers.find_by(id: user.id).present?
+  end
+
   private
 
   def add_author_to_subscribers
