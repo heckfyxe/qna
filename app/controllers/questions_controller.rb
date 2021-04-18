@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :question, only: %i[show edit update destroy subscribe unsubscribe]
+  before_action :question, only: %i[show edit update destroy]
 
   after_action :publish_question, only: :create
 
@@ -43,16 +43,6 @@ class QuestionsController < ApplicationController
     question.destroy
     flash[:notice] = 'Question successfully deleted.'
     redirect_to questions_path
-  end
-
-  def subscribe
-    return head :conflict if question.subscribed_by?(current_user)
-    question.subscribe(current_user)
-  end
-
-  def unsubscribe
-    return head :conflict unless question.subscribed_by?(current_user)
-    question.unsubscribe(current_user)
   end
 
   private

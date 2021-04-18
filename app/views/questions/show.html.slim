@@ -1,7 +1,7 @@
 .question
   p#question-id class='d-none' = question.id
   h1= question.title
-  - if can? :subscribe, question
+  - if can? :create, Subscription
     = question_subscribe_link('Subscribe', true, question, !question.subscribed_by?(current_user))
     = question_subscribe_link('Unsubscribe', false, question, question.subscribed_by?(current_user))
   p#question-rating= "Rating: #{question.rating}"

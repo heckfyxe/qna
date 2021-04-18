@@ -57,7 +57,8 @@ describe Ability do
     it { should be_able_to :vote, create(:question, author: other) }
     it { should be_able_to :vote, create(:answer, author: other) }
 
-    it { should be_able_to :subscribe, create(:question) }
-    it { should be_able_to :unsubscribe, create(:question) }
+    it { should be_able_to :create, create(:subscription) }
+    it { should be_able_to :destroy, create(:subscription, user: user) }
+    it { should_not be_able_to :destroy, create(:subscription, user: other) }
   end
 end

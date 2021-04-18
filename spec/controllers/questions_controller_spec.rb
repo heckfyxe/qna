@@ -161,21 +161,5 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to root_path
       end
     end
-
-    describe 'POST #subscribe' do
-      it 'subscribes the user' do
-        question
-        expect { post :subscribe, params: { id: question }, format: :js }.to change(Subscription, :count).by(1)
-      end
-    end
-
-    describe 'POST #unsubscribe' do
-      let!(:subscription)  { create(:subscription, question: question, user: user) }
-
-      it 'unsubscribes the user' do
-        question
-        expect { post :unsubscribe, params: { id: question }, format: :js }.to change(Subscription, :count).by(-1)
-      end
-    end
   end
 end
