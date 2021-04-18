@@ -22,9 +22,7 @@ Rails.application.routes.draw do
       resources :comments, only: :create
     end
 
-    member do
-      post :subscribe, :unsubscribe
-    end
+    resource :subscriptions, only: %i[create destroy]
   end
 
   resources :files, only: :destroy

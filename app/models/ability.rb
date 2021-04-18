@@ -38,7 +38,7 @@ class Ability
       model.author_id != user.id
     end
 
-    can :subscribe, Question
-    can :unsubscribe, Question
+    can :create, Subscription
+    can :destroy, Subscription, user_id: user.id
   end
 end
